@@ -1,38 +1,75 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { createStackNavigator } from 'react-navigation-stack'
+import { createAppContainer } from 'react-navigation';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
+// StackNavigator provides the way for your app to transition between the screens and manage navigation history.
+import Drugs from './Screens/Plants';
+import Profile from './Screens/Profile';
+import Login from './Screens/Login';
+import PlantInfo from './Screens/PlantInfo';
+import AddStory from './Screens/AddStory';
+import JournalScreen from './Screens/Journal';
+import { View, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' + 'Shake or press menu button for dev menu',
+
+const ProfileStack = createStackNavigator({
+  ProfileScreen: { screen: Profile},
+  JournalScreen: {screen: JournalScreen}
 });
+
+const PlantStack = createStackNavigator({
+  PlantScreen: { screen: Drugs },
+  PlantInfo: { screen: PlantInfo },
+  AddStory: { screen: AddStory },
+});
+
+
+
+const BottomTabNavigator = createMaterialBottomTabNavigator(
+  {
+    PlantsScreen: { screen: PlantStack,
+      navigationOptions:{ 
+        tabBarLabel:'Plant',  
+        tabBarIcon: ({ tintColor }) => (  
+            <View>  
+                <Icon style={[{color: tintColor}]} size={25} name={'ios-leaf'}/>  
+            </View>),  
+      },
+    },
+      JournalScreen: { screen: ProfileStack,
+        navigationOptions:{  
+          tabBarLabel:'My Stuff',  
+          tabBarIcon: ({ tintColor }) => (  
+              <View>  
+                  <Icon style={[{color: tintColor}]} size={25} name={'ios-person'}/>  
+              </View>),  
+        },
+      },
+  },
+  {
+    initialRouteName: 'PlantsScreen',
+    tabBarlabel: 'PlantsScreen',
+    activeColor: '#f0edf6',
+    inactiveColor: '#3e2465',
+    barStyle: { backgroundColor: '#694fad' },
+  }
+);
+
+const BottomTabContainer = createAppContainer(BottomTabNavigator)
+const AppContainer = createAppContainer(ProfileStack);
 
 export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
+      <BottomTabContainer screenProps={'yo yo yo'}  />
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+  bottomTabNavigator: {
+    color: '#F4DBD8',
+    backgroundColor: '#58355E'
+  }
+})
