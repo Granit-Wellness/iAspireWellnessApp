@@ -7,6 +7,7 @@ import {
 import { SearchBar, ButtonGroup } from 'react-native-elements'
 import axios from 'axios'
 import DrugList from '../Components/DrugList'
+const { getSections } = require('../objectFormattingUtils')
 
 class Drugs extends React.Component {
   constructor(props) {
@@ -25,16 +26,6 @@ class Drugs extends React.Component {
     };
     this.updateIndex = this.updateIndex.bind(this)
   }
-
-getSections(drugList){
-    let newSections = []
-    drugList.forEach(drug => {
-        if (!newSections.includes(drug.name[0])){
-            newSections.push(drug.name[0])
-        }
-    })
-    return newSections
-}
 
 
 async componentDidMount() {
@@ -70,7 +61,7 @@ updateIndex(selectedIndex) {
     
     if (this.state.loading) {
       const filteredDrugs = this.state.combinedDrugAlias.filter(drug => {
-        if (drug.alias.forEach((alias) => alias.toLowerCase().includes(this.state.search.toLowerCase()))) {
+        if (drug.alias.some((alias) => alias.toLowerCase().includes(this.state.search.toLowerCase()))) {
           return true;
         }
         if (drug.drug.name.toLowerCase().includes(this.state.search.toLowerCase())) {
@@ -96,7 +87,7 @@ updateIndex(selectedIndex) {
             onPress={this.updateIndex}
             selectedIndex={selectedIndex}
             buttons={buttons}
-            containerStyle={{height: 20}}
+            containerStyle={styles.buttonGroupContainer}
             selectedButtonStyle={{backgroundColor: '#58355E', padding: 0}}
           />
           <DrugList state={this.state} navigation={this.props.navigation} filteredDrugs={categorizedAndFiltered}/>
@@ -117,7 +108,18 @@ const styles = StyleSheet.create({
       display: 'flex',
       flex: 1,
       flexDirection: 'column',
-      padding: 0
+      padding: 0,
+      width: '100%',
+    },
+// test on different phone sizes search better styling practices
+    buttonGroupContainer: {
+      margin: 0,
+      padding: 0,
+      height: 20,
+      width: '101%',
+      position: 'relative',
+      right: 11,
+      borderRadius: 0,
     },
 })
 

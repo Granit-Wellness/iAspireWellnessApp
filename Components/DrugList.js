@@ -4,41 +4,11 @@ import {
   View,
   Text,
   SectionList,
-  Header,
-  ListItem
 } from 'react-native';
-import { Card, Avatar } from 'react-native-elements'
+import { Avatar } from 'react-native-elements'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+const { createNewData } = require('../objectFormattingUtils') 
 
-
-function getSections(drugList){
-    let newSections = []
-    drugList.forEach(drug => {
-        if (!newSections.includes(drug.drug.name[0])){
-            newSections.push(drug.drug.name[0])
-        }
-    })
-    return newSections
-}
-
-function createNewData(drugList){
-    let dataArray = []
-    let sections = getSections(drugList)
-    let newData = sections.map(section => {
-        let newObj = {
-            title: section,
-            data: []
-        }
-        dataArray.push(newObj)
-    })
-    drugList.map(drug => {
-        for(let i = 0; i < dataArray.length; i++){
-            if (dataArray[i]['title'] === drug.drug.name[0]){
-                dataArray[i].data.push({drug: drug})
-            }
-        }
-    })
-    return dataArray
-}
 
 export default DrugList = (props) => {
 
@@ -52,23 +22,28 @@ export default DrugList = (props) => {
             renderItem={({item}) => {
                 return(
                 <View style={styles.itemContainer}>
+                  {console.log(item)}
                     <Avatar
                         rounded
                         source={{
                             uri:item.drug.drug.image,
                         }}
-                        onPress={() => {
-                          props.navigation.navigate('PlantInfo', {drug: item.drug.drug, alias: item.drug.alias})
-                        }}
                     />
-                    <View style={styles.itemDetail}>
+                    <TouchableOpacity 
+                      style={styles.itemDetail}
+                      onPress={() => {
+                        props.navigation.navigate('PlantInfo', {drug: item.drug.drug, alias: item.drug.alias})
+                      }}>
                       <Text style={styles.item}>
                         {item.drug.drug.name}
                       </Text>
-                      <Text style={styles.subitem}>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode='tail'
+                        style={styles.subitem}>
                         {item.drug.alias.join(', ')}
                       </Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 )}
                 }
@@ -84,10 +59,10 @@ export default DrugList = (props) => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop: 22,
       flexDirection: 'row',
       alignContent: 'flex-start',
-      marginTop: 0
+      marginTop: 0,
+      width: '100%',
     },
 
     sectionHeader: {
@@ -105,7 +80,9 @@ const styles = StyleSheet.create({
       display: 'flex',
       justifyContent: 'center',
       flexDirection: 'column',
-      height: 50
+      height: 50,
+      overflow: 'hidden',
+      width: 370,
     },
   
     item: {
@@ -121,9 +98,10 @@ const styles = StyleSheet.create({
     avatar: {},
 
     itemContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingLeft: 10,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingLeft: 10,
+      width: '100%'
     }
   });
