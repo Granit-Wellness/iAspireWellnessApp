@@ -22,7 +22,6 @@ export default DrugList = (props) => {
             renderItem={({item}) => {
                 return(
                 <View style={styles.itemContainer}>
-                  {console.log(item)}
                     <Avatar
                         rounded
                         source={{

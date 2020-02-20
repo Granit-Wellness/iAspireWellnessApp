@@ -4,73 +4,77 @@ import {
     Text,
     StyleSheet
   } from 'react-native';
-  import { Card, Button } from 'react-native-elements'
+import { Card, Image, Divider } from 'react-native-elements'
 import { ScrollView } from 'react-native-gesture-handler';
+import axios from 'axios'
+import DrugInfoHeader from '../Components/DrugInfoHeader'
+import DrugInfoSlider from '../Components/DrugInfoSlider'
+import DrugStories from '../Components/DrugStories'
+import DrugDiscussions from '../Components/DrugDiscussions'
 
-function PlantInfo(props) {
-    const drug = props.navigation.state.params.drug
-    const aliases = props.navigation.state.params.alias;
 
-    //this function can take in a sting as a title or a drug object.
-
-    const createCardProps = (drug) => {
-        if (typeof(drug) === 'string'){
-            return {
-                title: drug,
-                containerStyle: { width: '90%' }
-            }
-            } else {
-                return {
-                    title: drug.name,
-                    image: { uri: drug.image },
-                    // conditionally add subtitle in props if alias exists
-                    ...aliases.length > 0 && 
-                    { 
-                    featuredSubtitle: aliases.join(', '),
-                    featuredSubtitleStyle: {textAlign: 'center'},
-                    containerStyle: { width: '90%' }
-                }
-            }
+class PlantInfo extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          drug_stories: [],
+          drug_discussions: [],
+          loading: true,
+          drug: this.props.navigation.state.params.drug,
+          aliases: this.props.navigation.state.params.alias,
+          selectedIndex: 0,
+        };
+      }
+    
+      async componentDidMount() {
+        try {
+          const drug_stories = await axios.get('http://127.0.0.1:8000/drugs/drug_stories/')
+          this.setState({ loading: true, drug_stories: drug_stories.data })
+        } catch (error) {
+          this.setState({error, loading: false})
+          console.error(error);
         }
-    }
-
+      }
+    render(){ 
+    const {drug_stories, loading, aliases, drug, selectedIndex} = this.state
+    const { short_term_effects, long_term_effects, withdrawl, dependency } = drug
+    const drugInfo = [short_term_effects, long_term_effects, withdrawl, dependency]
     return (
-    <ScrollView>
-        <View style={styles.container}>
-            <Card {...createCardProps(drug)}>
-                <Text style={styles.drugDescription}>
-                    {drug.description || ''}
-                </Text>
-            </Card>
-            <Card {...createCardProps("Short Term Effects")}>
-                <Text style={styles.drugDescription}>
-                    {drug.short_term_effects.join(", ") || 'No known short term efffects.'}
-                </Text>
-            </Card>
-            <Card {...createCardProps("Long Term Effects")} >
-                <Text style={styles.drugDescription}>
-                    {drug.long_term_effects.join(", ") || 'No known long term efffects.'}
-                </Text>
-            </Card>
-            <Card title="Withdrawl" {...createCardProps("Withdrawl")}>
-                <Text style={styles.drugDescription}>
-                    {drug.withdrawl.join(", ") || 'No known short withdrawl symptoms.'}
-                </Text>
-            </Card>
-            <Card title="Dependency" {...createCardProps("Dependency")}>
-                <Text style={styles.drugDescription}>
-                    {drug.withdrawl.join(", ") || 'No known short dependency behaviors.'}
-                </Text>
-            </Card>
-            <Button
-                    buttonStyle={styles.buttonStyle}
-                    title='ADD STORY' 
-                    onPress={() => props.navigation.navigate('AddStory')}/>
+        <View style={{display: 'flex', flexDirection: 'column', color: 'blue', paddingTop: 10, height: '35%', flex: 1, paddingBottom: 0}}>
+         <DrugInfoHeader drug={drug} aliases={aliases}/>
+            <View> 
+                <ScrollView horizontal={true} style={{height: 150, display: 'flex', backgroundColor: 'grey'}}>
+                    <DrugInfoSlider drug={drug}/>
+               </ScrollView>
+            </View>
+                <View>
+                    <View  style={{alignSelf: 'center', display: 'flex', flexDirection: 'row', paddingBottom: 10}}>
+                        <View style={{alignSelf:'flex-start', flex: 1, paddingLeft: 20}}>
+                            <Text style={{paddingLeft: 10, fontSize:24, fontWeight: '300', paddingTop: 5, fontStyle: 'italic', paddingBottom: 5}} onPress={()=> this.setState({selectedIndex: 0})}>
+                                Stories
+                            </Text>
+                            <Divider style={{width: 150}}/>
+                        </View>
+                        <View style={{alignSelf: 'flex-end', flex:1, paddingRight: 20}}>
+                            <Text style={{paddingLeft: 20, fontSize:24, fontWeight: '300', paddingTop: 5, fontStyle: 'italic', paddingBottom: 5}} onPress={()=> this.setState({selectedIndex: 1})}>
+                                Discussion
+                            </Text>
+                            <Divider style={{width: 150}}/>
+                        </View>
+                    </View>
+                <View style={{display: 'flex', flexDirection:'column', alignSelf:'center'}}>
+                    <ScrollView style={{flex: 1}}>
+                        {this.state.selectedIndex ? 
+                        <DrugDiscussions/> :
+                        <DrugStories stories={drug_stories} drug={drug}/>
+                        }
+                    </ScrollView>
+                </View>
+            </View>
         </View>
-    </ScrollView>
     );
   }
-
+}
 
   const styles = StyleSheet.create({
     container: {
@@ -83,10 +87,9 @@ function PlantInfo(props) {
         backgroundColor: '#0CA4A5'
     },
     drugDescription: {
-        marginBottom: 10, 
-        alignSelf: 'flex-start',
         fontFamily: "Avenir-Book", 
         textAlign: 'center',
+        height: '80%'
     }
 })
 
