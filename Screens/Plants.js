@@ -22,7 +22,8 @@ class Drugs extends React.Component {
       combinedDrugAlias: [],
       fromattedDrugs: [],
       error: null,
-      search: ''
+      search: '',
+      drug_stories: []
     };
     this.updateIndex = this.updateIndex.bind(this)
   }
@@ -32,8 +33,9 @@ async componentDidMount() {
     try {
       const drugs = await axios.get(`http://127.0.0.1:8000/drugs/all_drugs/`)
       const alias = await axios.get(`http://127.0.0.1:8000/drugs/all_alias/`)
+      const drug_stories = await axios.get('http://127.0.0.1:8000/drugs/drug_stories/')
       const combinedData = this.aliasDrugCombiner(drugs.data, alias.data)
-      this.setState({ drugs: drugs.data, alias: alias.data, loading: true, combinedDrugAlias: combinedData })
+      this.setState({ drugs: drugs.data, alias: alias.data, loading: true, combinedDrugAlias: combinedData, drug_stories: drug_stories.data })
     } catch (error) {
       this.setState({error, loading: false})
       console.error(error);
