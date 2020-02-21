@@ -11,7 +11,6 @@ const { createNewData } = require('../objectFormattingUtils')
 
 
 export default DrugList = (props) => {
-
     const { filteredDrugs } = props
     const sectionedDrugs = createNewData(filteredDrugs)
     

@@ -40,7 +40,7 @@ class PlantInfo extends React.Component {
     const { short_term_effects, long_term_effects, withdrawl, dependency } = drug
     const drugInfo = [short_term_effects, long_term_effects, withdrawl, dependency]
     return (
-        <View style={{display: 'flex', flexDirection: 'column', color: 'blue', paddingTop: 10, height: '35%', flex: 1, paddingBottom: 0}}>
+        <ScrollView style={{display: 'flex', flexDirection: 'column', color: 'blue', paddingTop: 10, height: '35%', flex: 1, paddingBottom: 0}}>
          <DrugInfoHeader drug={drug} aliases={aliases}/>
             <View> 
                 <ScrollView horizontal={true} style={{height: 150, display: 'flex', backgroundColor: 'grey'}}>
@@ -66,12 +66,12 @@ class PlantInfo extends React.Component {
                     <ScrollView style={{flex: 1}}>
                         {this.state.selectedIndex ? 
                         <DrugDiscussions/> :
-                        <DrugStories stories={drug_stories} drug={drug}/>
+                        <DrugStories stories={drug_stories} drug={drug} navigation={this.props.navigation}/>
                         }
                     </ScrollView>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
   }
 }

@@ -6,8 +6,11 @@ import { createMaterialBottomTabNavigator } from 'react-navigation-material-bott
 import Drugs from './Screens/Plants';
 import Profile from './Screens/Profile';
 import Login from './Screens/Login';
+import AuthorInfo from './Screens/AuthorInfo'
+import StoryEntry from './Screens/StoryEntry'
 import PlantInfo from './Screens/PlantInfo';
-import AddStory from './Screens/AddStory';
+import AddStory from './Screens/AddStory'
+import DrugStory from './Screens/DrugStory';
 import JournalScreen from './Screens/Journal';
 import { View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -22,6 +25,10 @@ const PlantStack = createStackNavigator({
   PlantScreen: { screen: Drugs },
   PlantInfo: { screen: PlantInfo },
   AddStory: { screen: AddStory },
+  DrugStory: { screen: DrugStory },
+  AddStory: { screen: AddStory },
+  AuthorInfo: { screen: AuthorInfo },
+  StoryEntry: { screen: StoryEntry },
 });
 
 
