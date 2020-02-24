@@ -17,7 +17,7 @@ class AddStory extends Component {
       this.setState({ type: type })
    }
    submitType = () => {
-       console.log(this.props)
+       (this.props)
        this.props.navigation.navigate('AuthorInfo', 
        { type: this.state.type}
     )}

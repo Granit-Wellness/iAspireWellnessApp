@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import {Divider, Card} from 'react-native-elements'
 
 function DrugStory(props) {
-    const {story} = props.navigation.state.params
+    const { story } = props.navigation.state.params
         return (
             <ScrollView style={{display: 'flex'}}>
                 <View style={styles.storyHeader}>

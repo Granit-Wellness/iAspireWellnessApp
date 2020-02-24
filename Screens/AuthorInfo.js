@@ -3,18 +3,22 @@ import { View, Text, StyleSheet, Picker, TextInput } from 'react-native'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import RadioGroup, { Radio } from "react-native-radio-input";
 import { Card, Image, Divider } from 'react-native-elements'
+import { Ionicons } from '@expo/vector-icons'
+
 
 class AuthorInfo extends Component {
     constructor(props){
         super(props);
         this.state = {
             type: this.props.navigation.state.params.type,
+            name: '',
             gender: '',
             weight: 0,
             dose: '',
             age_at_time_of_experience: 0,
         }
         this.checkGender = this.checkGender.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
     }
     checkGender = (value) => {
         this.setState({ gender: value})
@@ -28,6 +32,9 @@ class AuthorInfo extends Component {
     }
     enterDose = (value) => {
         this.setState({dose: value})
+    }
+    enterName= (value) => {
+        this.setState({name: value})
     }
     makeWeightRange = (start, end) => {
         const result = []
@@ -47,6 +54,17 @@ class AuthorInfo extends Component {
        const {gender} = this.state
       return (
         <ScrollView style={styles.screenCoontainer}>
+            <Card style={styles.cardContainer}>
+                <TextInput
+                    style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                    onChangeText={text => this.enterName(text)}
+                    value={this.state.name}
+                    placeholder={'Enter Name'}
+                    style={{
+                        fontSize: 30,
+                    }}
+                    />
+            </Card>
             <Card style={styles.cardContainer}>
                 <Text style={styles.text}>Choose Your Preffered Gender</Text>
                 <RadioGroup RadioGroupStyle={{flexDirection:"row", alignSelf: 'center'}} getChecked={this.checkGender}>
@@ -76,20 +94,24 @@ class AuthorInfo extends Component {
                 </Picker>
             </Card>
             <Card>
-                <Text style={styles.text}>What was the approximate dose?</Text>
                 <TextInput
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                     onChangeText={text => this.enterDose(text)}
                     value={this.state.dose}
+                    placeholder={'Enter dose'}
+                    style={{
+                        fontSize: 30,
+                    }}
                     />
             </Card>
-            <Card>
-                <TouchableOpacity 
-                            style={styles.submitButton}
-                            onPress={() => this.onSubmit(this.state)}>
-                <Text style={styles.loginText}>Submit</Text>
-                </TouchableOpacity>
-            </Card>
+            <View style={styles.submitContainer}>
+                    <Text style = {styles.submitText}>Submit</Text>
+                    <Ionicons 
+                        style={styles.icon}name="md-arrow-round-forward" 
+                        size={40} 
+                        color="green" 
+                        onPress={this.onSubmit}/>
+            </View>
         </ScrollView>
       )
    }
@@ -121,6 +143,26 @@ const styles = StyleSheet.create({
     screenContainer:{
         display: 'flex',
         flexDirection: 'column'
-    }
+    },
+    submitContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    icon: {
+        paddingTop: 5,
+        paddingLeft: 5,
+        alignSelf: 'center'
+    },
+    title: {
+        fontSize:24, 
+        fontWeight: '400',
+        textAlign: 'center'
+    },
+    submitText: {
+        fontSize: 30,
+        alignSelf: 'center',
+        color: 'green',
+     },
  })
 export default AuthorInfo
