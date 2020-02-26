@@ -8,7 +8,8 @@ class AddStory extends Component {
     constructor(props){
         super(props)
         this.state = {
-            type: 'General'
+            type: 'General',
+            drug: this.props.navigation.state.params.drug
         }
         this.updateType = this.updateType.bind(this)
         this.submitType = this.submitType.bind(this)
@@ -19,7 +20,8 @@ class AddStory extends Component {
    submitType = () => {
        (this.props)
        this.props.navigation.navigate('AuthorInfo', 
-       { type: this.state.type}
+       { type: this.state.type,
+        drug: this.state.drug}
     )}
    render() {
       return (

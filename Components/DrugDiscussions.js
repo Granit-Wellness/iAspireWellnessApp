@@ -3,13 +3,44 @@ import {
     View,
     Text,
     StyleSheet,
-    TextInput
+    TextInput,
+    FlatList,
+    SafeAreaView,
 } from 'react-native';
-import { Card } from 'react-native-elements'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Card, Avatar, Divider } from 'react-native-elements'
+import { TouchableOpacity} from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons'
-import Icon from '@mdi/react'
-import { mdiAccount } from '@mdi/js'
+import EvilIcons from 'react-native-vector-icons/EvilIcons'
+
+const FlatListData = [
+    {
+      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+      title: 'First Item',
+    },
+    {
+      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+      title: 'Second Item',
+    },
+    {
+      id: '58694a0f-3da1-471f-bd96-145571e29d72',
+      title: 'Third Item',
+    },
+  ];
+
+  function Item({ title }) {
+    return (
+      <View style={styles.item}>
+        <Avatar
+            rounded
+            source={{
+                uri:
+                'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+            }}
+            />
+        <Text style={styles.title}>{title}</Text>
+      </View>
+    );
+  }
 
 class DrugDiscussion extends React.Component {
     constructor(props) {
@@ -36,6 +67,18 @@ class DrugDiscussion extends React.Component {
         };
       }
     
+  FlatListItemSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "85%",
+          backgroundColor: "#607D8B",
+          alignSelf: 'flex-end'
+        }}
+      />
+    );
+  }
     //   async componentDidMount() {
     //     try {
     //       const drug_stories = await axios.get('http://127.0.0.1:8000/drugs/drug_stories/')
@@ -52,8 +95,8 @@ class DrugDiscussion extends React.Component {
             <TextInput placeholder={'Ask the community...'} style={{
                         fontSize: 20,
                         alignSelf:'center',
-                        border: 'grey',
-                        borderWidth: 1,
+                        borderBottomColor: 'grey',
+                        borderBottomWidth: 1,
                         paddingLeft: 0,
                         height: 70,
                         width: 300
@@ -63,7 +106,7 @@ class DrugDiscussion extends React.Component {
         {this.state.posts.map(post => {
         return (
             <View key={post.id}>
-                <Card title={post.title}>
+                <Card containerStyle={{marginBottom: 0}} title={post.title}>
                 <View style={{display: 'flex', flexDirection:'column'}}>
                     <Text 
                         numberOfLines={5}
@@ -71,8 +114,23 @@ class DrugDiscussion extends React.Component {
                         style={{marginBottom: 10}}>
                         {post.content ||'No Entry'}
                     </Text>
-                    <Text>
-                    </Text>
+                    <Divider style={{marginBottom: 10}}/>
+                    <TouchableOpacity style={styles.commentButton}>
+                        <EvilIcons name={'comment'} style={styles.commentButtonIcon} size={25} color={'rgb(136, 153, 166)'}/>
+                        <Text style={styles.commentsCount}>Comment</Text>
+                </TouchableOpacity>
+                <Divider style={{marginBottom: 10}}/>
+                    <View>
+                </View>
+                        <View style={styles.container}>
+                        <FlatList
+                            style={{display: 'flex'}}
+                            data={FlatListData}
+                            renderItem={({ item }) => <Item title={item.title} />}
+                            keyExtractor={item => item.id}
+                            ItemSeparatorComponent = {this.FlatListItemSeparator}
+                        />
+                        </View>
                     </View>
                 </Card>
             </View>
@@ -101,6 +159,41 @@ const styles = StyleSheet.create({
         textAlign:'center',
         paddingLeft : 10,
         paddingRight : 10
-    }
+    },
+    commentButton: {
+        paddingLeft: 0,
+        flex: 0.25,
+        alignItems: "center",
+        flexDirection: "row",
+        borderColor: "red",
+        borderWidth: 0,
+        display: 'flex',
+        flexDirection: 'row',
+        marginBottom: 10
+      },
+      commentButtonIcon: {
+        margin: 0,
+        alignSelf: 'flex-start',
+        borderWidth: 0,
+      },
+      commentsCount: {
+        color: "rgb(136, 153, 166)",
+        marginRight: 20
+      },
+      container: {
+        marginTop: 20,
+        marginLeft: 15,
+        backgroundColor: '#DCDCDC'
+      },
+      item: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginVertical: 5,
+        marginHorizontal: 5,
+      },
+      title: {
+          alignSelf: 'center',
+          paddingLeft: 10,
+      }
 })
 export default DrugDiscussion

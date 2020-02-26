@@ -16,6 +16,7 @@ class AuthorInfo extends Component {
             weight: 0,
             dose: '',
             age_at_time_of_experience: 0,
+            drug: this.props.navigation.state.params.drug
         }
         this.checkGender = this.checkGender.bind(this)
         this.onSubmit = this.onSubmit.bind(this)

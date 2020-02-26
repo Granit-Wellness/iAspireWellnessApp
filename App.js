@@ -14,6 +14,8 @@ import DrugStory from './Screens/DrugStory';
 import JournalScreen from './Screens/Journal';
 import { View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import store from './store';
+import { Provider } from 'react-redux';
 
 
 const ProfileStack = createStackNavigator({
@@ -69,7 +71,9 @@ const AppContainer = createAppContainer(ProfileStack);
 export default class App extends Component {
   render() {
     return (
-      <BottomTabContainer screenProps={'yo yo yo'}  />
+      <Provider store={store}>
+        <BottomTabContainer screenProps={'yo yo yo'}  />
+      </Provider>
     );
   }
 }

@@ -7,6 +7,10 @@ import {
 import { SearchBar, ButtonGroup } from 'react-native-elements'
 import axios from 'axios'
 import DrugList from '../Components/DrugList'
+import {
+  getAllDrugs,
+} from '../store/reducers/drugs'
+import { connect } from 'react-redux'
 const { getSections } = require('../objectFormattingUtils')
 
 class Drugs extends React.Component {
@@ -31,11 +35,12 @@ class Drugs extends React.Component {
 
 async componentDidMount() {
     try {
-      const drugs = await axios.get(`http://127.0.0.1:8000/drugs/all_drugs/`)
+      // const drugs = await axios.get(`http://127.0.0.1:8000/drugs/all_drugs/`)
+      await this.props.getDrugs()
       const alias = await axios.get(`http://127.0.0.1:8000/drugs/all_alias/`)
       const drug_stories = await axios.get('http://127.0.0.1:8000/drugs/drug_stories/')
-      const combinedData = this.aliasDrugCombiner(drugs.data, alias.data)
-      this.setState({ drugs: drugs.data, alias: alias.data, loading: true, combinedDrugAlias: combinedData, drug_stories: drug_stories.data })
+      const combinedData = this.aliasDrugCombiner(this.props.allDrugs, alias.data)
+      this.setState({ drugs: this.props.allDrugs, alias: alias.data, loading: true, combinedDrugAlias: combinedData, drug_stories: drug_stories.data })
     } catch (error) {
       this.setState({error, loading: false})
       console.error(error);
@@ -125,4 +130,11 @@ const styles = StyleSheet.create({
     },
 })
 
-export default Drugs;
+const mapStateToProps = state => ({
+  allDrugs: state.drug
+})
+const mapDispatchToProps = dispatch => ({
+  getDrugs: () => dispatch(getAllDrugs()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Drugs)

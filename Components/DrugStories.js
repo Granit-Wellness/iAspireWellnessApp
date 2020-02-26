@@ -17,13 +17,15 @@ function DrugStories(props){
     function onPressed(story){
         navigation.navigate(
           'DrugStory',
-          { story: story}
+        { 
+            story: story,
+            }
         )
     };
     return(
     <View style={{display: 'flex', flexDirection:'column'}}>
         <View style={{paddingLeft: 30, display:'flex', flexDirection:'column', alignContent: 'center'}}>
-            <Ionicons name="md-add-circle" size={50} color="green" onPress={() => navigation.navigate('AddStory')}/>
+            <Ionicons name="md-add-circle" size={50} color="green" onPress={() => navigation.navigate('AddStory', {drug: drug})}/>
             <Text style={{fontSize:15, fontWeight: '300', paddingTop: 5, fontStyle: 'italic', paddingBottom: 5}}>Add Story</Text>
         </View>
         {drugStories.map(story => {
